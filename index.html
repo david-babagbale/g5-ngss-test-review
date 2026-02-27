@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G5 NGSS Science Test Review</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--ps:#3b82f6;--ls:#22c55e;--ess:#f59e0b;--ets:#a855f7;
+--strong:#16a34a;--partial:#d97706;--none:#dc2626;--generated:#6366f1;
+--bg:#f8fafc;--sidebar:#1e293b;--card:#fff;--text:#1e293b;--muted:#64748b;
+--border:#e2e8f0;--radius:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:15px;line-height:1.6}
+a{color:var(--ps);text-decoration:none}
+
+/* Sidebar */
+.sidebar{width:260px;background:var(--sidebar);color:#fff;padding:0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sidebar-header{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-header h1{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.sidebar-header p{font-size:12px;color:#94a3b8;margin-top:4px}
+.sidebar nav{flex:1;padding:12px 0}
+.sidebar nav button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 20px;border:none;background:none;color:#cbd5e1;font-size:14px;cursor:pointer;text-align:left;transition:all .15s}
+.sidebar nav button:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar nav button.active{background:rgba(59,130,246,.2);color:#60a5fa;border-right:3px solid #60a5fa}
+.sidebar nav button .icon{width:20px;text-align:center;font-size:16px}
+
+/* Main */
+.main{margin-left:260px;flex:1;min-height:100vh}
+.page{display:none;padding:32px 40px;max-width:1200px}
+.page.active{display:block}
+.page-title{font-size:24px;font-weight:700;margin-bottom:8px}
+.page-subtitle{color:var(--muted);margin-bottom:28px;font-size:15px}
+
+/* Cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.stat-card .value{font-size:32px;font-weight:800}
+.stat-card .label{font-size:13px;color:var(--muted);margin-top:4px}
+.stat-card.ps .value{color:var(--ps)}.stat-card.ls .value{color:var(--ls)}.stat-card.ess .value{color:var(--ess)}.stat-card.ets .value{color:var(--ets)}
+.stat-card.strong .value{color:var(--strong)}.stat-card.partial .value{color:var(--partial)}.stat-card.none-m .value{color:var(--none)}.stat-card.gen .value{color:var(--generated)}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge-strong{background:#dcfce7;color:#166534}.badge-partial{background:#fef3c7;color:#92400e}
+.badge-none{background:#fee2e2;color:#991b1b}.badge-generated{background:#e0e7ff;color:#3730a3}
+.badge-ps{background:#dbeafe;color:#1e40af}.badge-ls{background:#dcfce7;color:#166534}
+.badge-ess{background:#fef3c7;color:#92400e}.badge-ets{background:#f3e8ff;color:#6b21a8}
+.badge-dok1{background:#e0f2fe;color:#075985}.badge-dok2{background:#fef9c3;color:#854d0e}.badge-dok3{background:#fce7f3;color:#9d174d}
+.badge-staar{background:#f1f5f9;color:#475569}.badge-new{background:#e0e7ff;color:#4338ca}
+
+/* Tables */
+.table-wrap{overflow-x:auto;margin:20px 0}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+th{background:#f1f5f9;text-align:left;padding:12px 16px;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+td{padding:12px 16px;border-top:1px solid var(--border);font-size:14px;vertical-align:top}
+tr:hover td{background:#f8fafc}
+
+/* Question Bank */
+.qb-layout{display:flex;gap:24px;min-height:calc(100vh - 180px)}
+.qb-list{width:340px;flex-shrink:0;display:flex;flex-direction:column}
+.qb-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.qb-filters select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#fff}
+.qb-items{flex:1;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}
+.qb-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.qb-item:hover{background:#f1f5f9}
+.qb-item.active{background:#eff6ff;border-left:3px solid var(--ps)}
+.qb-item-title{font-weight:600;font-size:14px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.qb-item-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.qb-detail{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;overflow-y:auto;max-height:calc(100vh - 180px)}
+.qb-detail-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.q-stem{font-size:16px;line-height:1.7;margin-bottom:20px;padding:16px;background:#f8fafc;border-radius:var(--radius);border-left:4px solid var(--ps)}
+.q-choices{list-style:none;margin-bottom:24px}
+.q-choices li{padding:12px 16px;margin-bottom:8px;border:2px solid var(--border);border-radius:var(--radius);font-size:15px;display:flex;align-items:flex-start;gap:10px}
+.q-choices li.correct{border-color:var(--strong);background:#f0fdf4}
+.q-choices .letter{font-weight:700;color:var(--muted);min-width:24px}
+.q-choices li.correct .letter{color:var(--strong)}
+.q-explanation{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);padding:16px;margin-bottom:20px}
+.q-explanation h4{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:8px}
+.q-meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.q-meta-card{background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+.q-meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.q-meta-card .val{font-weight:600;font-size:14px}
+.image-flag{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;margin-top:12px}
+.image-flag.needed{background:#fef3c7;color:#92400e}.image-flag.not-needed{background:#dcfce7;color:#166534}
+.q-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.q-table th,.q-table td{padding:8px 12px;border:1px solid var(--border);text-align:left}
+.q-table th{background:#f1f5f9;font-size:12px;font-weight:600}
+
+/* Content sections */
+.content-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.content-card h3{font-size:17px;font-weight:700;margin-bottom:12px}
+.content-card h4{font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.content-card p,.content-card li{font-size:14px;line-height:1.7}
+.content-card ul{padding-left:20px;margin:8px 0}
+.content-card li{margin-bottom:6px}
+
+/* Bar charts */
+.bar-chart{margin:16px 0}
+.bar-row{display:flex;align-items:center;margin-bottom:10px}
+.bar-label{width:160px;font-size:13px;font-weight:600;flex-shrink:0}
+.bar-track{flex:1;height:28px;background:#f1f5f9;border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:12px;font-weight:600;color:#fff;transition:width .5s}
+.bar-value{margin-left:12px;font-size:13px;font-weight:600;width:50px;text-align:right;flex-shrink:0}
+
+/* Coverage */
+.pe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.pe-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.pe-card.covered{border-left:4px solid var(--strong)}
+.pe-card.partial-cov{border-left:4px solid var(--partial)}
+.pe-card.not-covered{border-left:4px solid var(--none)}
+.pe-card .pe-code{font-weight:700;font-size:14px;margin-bottom:4px}
+.pe-card .pe-text{font-size:13px;color:var(--muted);line-height:1.5}
+.pe-card .pe-status{margin-top:8px;font-size:12px;font-weight:600}
+
+/* Tier cards */
+.tier-section{margin:16px 0}
+.tier-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.tier-card h4{margin:0 0 8px}
+.tier-card p{font-size:13px;color:var(--muted)}
+.tier-card ul{font-size:13px}
+
+/* Print */
+@media print{.sidebar{display:none}.main{margin-left:0}.page{display:block!important}}
+
+/* Responsive */
+@media(max-width:1100px){.qb-layout{flex-direction:column}.qb-list{width:100%}.qb-detail{max-height:none}}
+@media(max-width:768px){.sidebar{width:60px}.sidebar-header h1,.sidebar-header p,.sidebar nav button span:not(.icon){display:none}.sidebar-header{padding:16px 10px}.sidebar nav button{justify-content:center;padding:12px}.main{margin-left:60px}.page{padding:20px}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+<div class="sidebar-header">
+<h1>G5 NGSS Test Review</h1>
+<p>Grade 5 Science Assessment</p>
+</div>
+<nav>
+<button class="active" onclick="showPage('dashboard')"><span class="icon">&#9673;</span><span>Dashboard</span></button>
+<button onclick="showPage('questions')"><span class="icon">&#9997;</span><span>Question Bank</span></button>
+<button onclick="showPage('blueprint')"><span class="icon">&#9638;</span><span>Test Blueprint</span></button>
+<button onclick="showPage('standards')"><span class="icon">&#9733;</span><span>NGSS Standards</span></button>
+<button onclick="showPage('gaps')"><span class="icon">&#9888;</span><span>Gap Analysis</span></button>
+<button onclick="showPage('practices')"><span class="icon">&#9776;</span><span>Best Practices</span></button>
+<button onclick="showPage('images')"><span class="icon">&#9881;</span><span>Image Strategy</span></button>
+</nav>
+</aside>
+
+<div class="main" id="app">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<h2 class="page-title">Dashboard</h2>
+<p class="page-subtitle">Grade 5 NGSS-Aligned Science Test &mdash; Assessment Review Overview</p>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="value">36</div><div class="label">STAAR 2021 Items Reviewed</div></div>
+<div class="stat-card strong"><div class="value">12</div><div class="label">Strong NGSS Match</div></div>
+<div class="stat-card partial"><div class="value">9</div><div class="label">Partial Match (Usable w/ Edits)</div></div>
+<div class="stat-card none-m"><div class="value">15</div><div class="label">No Match (TEKS Only)</div></div>
+<div class="stat-card gen"><div class="value">19</div><div class="label">New Questions Generated</div></div>
+<div class="stat-card ps"><div class="value">40</div><div class="label">Total Items for Test</div></div>
+</div>
+
+<div class="content-card">
+<h3>Domain Distribution (Recommended 40-Item Test)</h3>
+<div class="bar-chart">
+<div class="bar-row"><span class="bar-label">Physical Science</span><div class="bar-track"><div class="bar-fill" style="width:32.5%;background:var(--ps)">32.5%</div></div><span class="bar-value">13 items</span></div>
+<div class="bar-row"><span class="bar-label">Life Science</span><div class="bar-track"><div class="bar-fill" style="width:22.5%;background:var(--ls)">22.5%</div></div><span class="bar-value">9 items</span></div>
+<div class="bar-row"><span class="bar-label">Earth &amp; Space Sci.</span><div class="bar-track"><div class="bar-fill" style="width:32.5%;background:var(--ess)">32.5%</div></div><span class="bar-value">13 items</span></div>
+<div class="bar-row"><span class="bar-label">Engineering Design</span><div class="bar-track"><div class="bar-fill" style="width:12.5%;background:var(--ets)">12.5%</div></div><span class="bar-value">5 items</span></div>
+</div>
+</div>
+
+<div class="content-card">
+<h3>DOK (Depth of Knowledge) Distribution</h3>
+<div class="bar-chart">
+<div class="bar-row"><span class="bar-label">DOK 1 &mdash; Recall</span><div class="bar-track"><div class="bar-fill" style="width:12.5%;background:#0ea5e9">12.5%</div></div><span class="bar-value">5 items</span></div>
+<div class="bar-row"><span class="bar-label">DOK 2 &mdash; Skill/Concept</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:#eab308">55%</div></div><span class="bar-value">22 items</span></div>
+<div class="bar-row"><span class="bar-label">DOK 3 &mdash; Strategic</span><div class="bar-track"><div class="bar-fill" style="width:32.5%;background:#ec4899">32.5%</div></div><span class="bar-value">13 items</span></div>
+</div>
+</div>
+
+<div class="content-card">
+<h3>Question Source Breakdown</h3>
+<div class="bar-chart">
+<div class="bar-row"><span class="bar-label">STAAR (Direct Use)</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--strong)">12</div></div><span class="bar-value">30%</span></div>
+<div class="bar-row"><span class="bar-label">STAAR (Modified)</span><div class="bar-track"><div class="bar-fill" style="width:22.5%;background:var(--partial)">9</div></div><span class="bar-value">22.5%</span></div>
+<div class="bar-row"><span class="bar-label">Newly Generated</span><div class="bar-track"><div class="bar-fill" style="width:47.5%;background:var(--generated)">19</div></div><span class="bar-value">47.5%</span></div>
+</div>
+</div>
+</div>
+
+<!-- QUESTION BANK -->
+<div class="page" id="page-questions">
+<h2 class="page-title">Question Bank</h2>
+<p class="page-subtitle">Browse all 40 test items. Click any question to view full details, correct answer, and alignment info.</p>
+<div class="qb-layout">
+<div class="qb-list">
+<div class="qb-filters">
+<select id="filter-domain" onchange="filterQuestions()"><option value="all">All Domains</option><option value="PS">Physical Science</option><option value="LS">Life Science</option><option value="ESS">Earth &amp; Space</option><option value="ETS">Engineering</option></select>
+<select id="filter-source" onchange="filterQuestions()"><option value="all">All Sources</option><option value="STAAR">STAAR</option><option value="Generated">Generated</option></select>
+<select id="filter-dok" onchange="filterQuestions()"><option value="all">All DOK</option><option value="1">DOK 1</option><option value="2">DOK 2</option><option value="3">DOK 3</option></select>
+<select id="filter-image" onchange="filterQuestions()"><option value="all">Image Status</option><option value="yes">Needs Image</option><option value="no">No Image Needed</option></select>
+</div>
+<div class="qb-items" id="qb-items"></div>
+</div>
+<div class="qb-detail" id="qb-detail">
+<p style="color:var(--muted);text-align:center;margin-top:80px">Select a question from the list to view details.</p>
+</div>
+</div>
+</div>
+
+<!-- BLUEPRINT -->
+<div class="page" id="page-blueprint">
+<h2 class="page-title">Recommended Test Blueprint</h2>
+<p class="page-subtitle">Target: 40 multiple-choice items aligned to all 16 NGSS Grade 5 Performance Expectations</p>
+
+<div class="content-card">
+<h3>Blueprint by Domain</h3>
+<div class="table-wrap"><table>
+<tr><th>Domain</th><th>PEs Assessed</th><th># Items</th><th>% of Test</th><th>DOK Distribution</th></tr>
+<tr><td><span class="badge badge-ps">Physical Science</span></td><td>5-PS1-1, 5-PS1-2, 5-PS1-3, 5-PS1-4, 5-PS2-1, 5-PS3-1</td><td><strong>13</strong></td><td>32.5%</td><td>2 DOK1, 7 DOK2, 4 DOK3</td></tr>
+<tr><td><span class="badge badge-ls">Life Science</span></td><td>5-LS1-1, 5-LS2-1</td><td><strong>9</strong></td><td>22.5%</td><td>1 DOK1, 5 DOK2, 3 DOK3</td></tr>
+<tr><td><span class="badge badge-ess">Earth &amp; Space</span></td><td>5-ESS1-1, 5-ESS1-2, 5-ESS2-1, 5-ESS2-2, 5-ESS3-1</td><td><strong>13</strong></td><td>32.5%</td><td>2 DOK1, 7 DOK2, 4 DOK3</td></tr>
+<tr><td><span class="badge badge-ets">Engineering</span></td><td>3-5-ETS1-1, 3-5-ETS1-2, 3-5-ETS1-3</td><td><strong>5</strong></td><td>12.5%</td><td>0 DOK1, 3 DOK2, 2 DOK3</td></tr>
+<tr style="font-weight:700;background:#f8fafc"><td>TOTAL</td><td>16 PEs</td><td>40</td><td>100%</td><td>5 DOK1, 22 DOK2, 13 DOK3</td></tr>
+</table></div>
+</div>
+
+<div class="content-card">
+<h3>Items Per Performance Expectation</h3>
+<div class="table-wrap"><table>
+<tr><th>PE</th><th>Target Items</th><th>From STAAR</th><th>New Needed</th></tr>
+<tr><td>5-PS1-1</td><td>2</td><td>1 (Q11 modified)</td><td>1</td></tr>
+<tr><td>5-PS1-2</td><td>2</td><td>1 (Q32)</td><td>1</td></tr>
+<tr><td>5-PS1-3</td><td>3</td><td>3 (Q4, Q16, Q27)</td><td>0</td></tr>
+<tr><td>5-PS1-4</td><td>2</td><td>1 (Q21 modified)</td><td>1</td></tr>
+<tr><td>5-PS2-1</td><td>2</td><td style="color:var(--none)">0</td><td><strong>2</strong></td></tr>
+<tr><td>5-PS3-1</td><td>2</td><td>2 (Q9, Q19)</td><td>0</td></tr>
+<tr><td>5-LS1-1</td><td>3</td><td>1 (Q33 partial)</td><td>2</td></tr>
+<tr><td>5-LS2-1</td><td>3</td><td>2 (Q22, Q25 modified)</td><td>1</td></tr>
+<tr><td>5-ESS1-1</td><td>2</td><td style="color:var(--none)">0</td><td><strong>2</strong></td></tr>
+<tr><td>5-ESS1-2</td><td>3</td><td>2 (Q2, Q23)</td><td>1</td></tr>
+<tr><td>5-ESS2-1</td><td>3</td><td>3 (Q7, Q26, Q34 modified)</td><td>0</td></tr>
+<tr><td>5-ESS2-2</td><td>2</td><td>1 (Q18 partial)</td><td>1</td></tr>
+<tr><td>5-ESS3-1</td><td>3</td><td>2 (Q28, Q31 modified)</td><td>1</td></tr>
+<tr><td>3-5-ETS1-1</td><td>2</td><td style="color:var(--none)">0</td><td><strong>2</strong></td></tr>
+<tr><td>3-5-ETS1-2</td><td>2</td><td style="color:var(--none)">0</td><td><strong>2</strong></td></tr>
+<tr><td>3-5-ETS1-3</td><td>1</td><td style="color:var(--none)">0</td><td><strong>1</strong></td></tr>
+<tr style="font-weight:700;background:#f8fafc"><td>TOTAL</td><td>~40</td><td>~21</td><td>~19</td></tr>
+</table></div>
+</div>
+</div>
+
+<!-- STANDARDS -->
+<div class="page" id="page-standards">
+<h2 class="page-title">NGSS Grade 5 Performance Expectations</h2>
+<p class="page-subtitle">All 16 PEs (13 science + 3 engineering) that should be assessed. Color indicates coverage from STAAR items.</p>
+<div id="standards-grid" class="pe-grid"></div>
+</div>
+
+<!-- GAP ANALYSIS -->
+<div class="page" id="page-gaps">
+<h2 class="page-title">Gap Analysis</h2>
+<p class="page-subtitle">Where the STAAR test falls short of NGSS coverage, and how to fill those gaps.</p>
+
+<div class="content-card">
+<h3>STAAR Mapping Summary</h3>
+<div class="bar-chart">
+<div class="bar-row"><span class="bar-label">Strong Match</span><div class="bar-track"><div class="bar-fill" style="width:33.3%;background:var(--strong)">12 items</div></div><span class="bar-value">33%</span></div>
+<div class="bar-row"><span class="bar-label">Partial Match</span><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--partial)">9 items</div></div><span class="bar-value">25%</span></div>
+<div class="bar-row"><span class="bar-label">No Match</span><div class="bar-track"><div class="bar-fill" style="width:41.7%;background:var(--none)">15 items</div></div><span class="bar-value">42%</span></div>
+</div>
+</div>
+
+<div class="content-card">
+<h3>Why 15 STAAR Questions Don't Align</h3>
+<p style="margin-bottom:12px">These TEKS topics are placed at different grade levels in NGSS or aren't covered at all:</p>
+<div class="table-wrap"><table>
+<tr><th>TEKS Content</th><th>NGSS Grade Placement</th><th>STAAR Qs</th></tr>
+<tr><td>Light properties (reflection, refraction, absorption)</td><td>Grade 4 (4-PS4)</td><td>Q3, Q24</td></tr>
+<tr><td>Electrical circuits</td><td>Grade 4 (4-PS3)</td><td>Q8, Q10, Q20</td></tr>
+<tr><td>Forces: friction, simple machines</td><td>Grade 3 (3-PS2)</td><td>Q5, Q29</td></tr>
+<tr><td>Inherited vs. learned behaviors</td><td>Grade 3 (3-LS3)</td><td>Q6, Q30</td></tr>
+<tr><td>Life cycles</td><td>Grade 3 (3-LS1)</td><td>Q17</td></tr>
+<tr><td>Fossils</td><td>Grade 3 (3-LS4)</td><td>Q13</td></tr>
+<tr><td>Animal structural adaptations</td><td>Grade 4 (4-LS1)</td><td>Q15, Q35</td></tr>
+<tr><td>Solar system planet positions</td><td>Not a G5 NGSS PE</td><td>Q14</td></tr>
+<tr><td>Earth/Moon relative sizes</td><td>Not a G5 NGSS PE</td><td>Q12</td></tr>
+</table></div>
+</div>
+
+<div class="content-card">
+<h3>Critical Gaps (Zero STAAR Coverage)</h3>
+<div class="pe-grid">
+<div class="pe-card not-covered"><div class="pe-code">5-PS2-1</div><div class="pe-text">Gravitational force directed down</div><div class="pe-status" style="color:var(--none)">Needs 2 new questions</div></div>
+<div class="pe-card not-covered"><div class="pe-code">5-ESS1-1</div><div class="pe-text">Star brightness vs. distance</div><div class="pe-status" style="color:var(--none)">Needs 2 new questions</div></div>
+<div class="pe-card not-covered"><div class="pe-code">3-5-ETS1-1</div><div class="pe-text">Define a design problem</div><div class="pe-status" style="color:var(--none)">Needs 2 new questions</div></div>
+<div class="pe-card not-covered"><div class="pe-code">3-5-ETS1-2</div><div class="pe-text">Compare solutions</div><div class="pe-status" style="color:var(--none)">Needs 2 new questions</div></div>
+<div class="pe-card not-covered"><div class="pe-code">3-5-ETS1-3</div><div class="pe-text">Fair tests / variables</div><div class="pe-status" style="color:var(--none)">Needs 1 new question</div></div>
+</div>
+</div>
+
+<div class="content-card">
+<h3>Where to Source Additional Questions</h3>
+<div class="tier-section">
+<div class="tier-card"><h4>Tier 1 &mdash; Free, NGSS-Aligned Released Items</h4><ul>
+<li><strong>CAST Practice &amp; Training Tests</strong> (California) &mdash; gold standard for NGSS alignment</li>
+<li><strong>NJSLA-S Released Items</strong> (New Jersey)</li>
+<li><strong>ILEARN Released Items</strong> (Indiana)</li>
+<li><strong>Wisconsin Forward Exam</strong> &mdash; DOK 2&ndash;3 emphasis</li>
+<li><strong>Oregon OSAS Released Items</strong></li>
+<li><strong>NSTA Assessment Resources</strong></li>
+</ul></div>
+<div class="tier-card"><h4>Tier 2 &mdash; Other State Tests with Partial Overlap</h4><ul>
+<li><strong>STAAR from other years</strong> (2019, 2022, 2023) &mdash; same mapping process</li>
+<li><strong>Florida SSA Released Items</strong> (Grade 5)</li>
+<li><strong>New York NYSED Science Released Items</strong> (Grade 5)</li>
+</ul></div>
+<div class="tier-card"><h4>Tier 3 &mdash; Paid / Licensed Item Banks</h4><ul>
+<li>NWEA MAP Science Item Bank</li>
+<li>Amplify Science Assessments</li>
+<li>STEMscopes Assessment Items</li>
+<li>OpenSciEd Assessment Items (open-source)</li>
+<li>Savvas (Pearson) Elevate Science</li>
+</ul></div>
+<div class="tier-card"><h4>Tier 4 &mdash; Custom Generation</h4><p>Write original items aligned to gap PEs (19 items included in this review).</p></div>
+</div>
+</div>
+</div>
+
+<!-- BEST PRACTICES -->
+<div class="page" id="page-practices">
+<h2 class="page-title">Test Construction Best Practices</h2>
+<p class="page-subtitle">Research-based principles for building high-quality standardized science assessments.</p>
+
+<div class="content-card">
+<h3>Test Blueprint / Table of Specifications</h3>
+<p>A test blueprint is the architectural plan that defines item distribution across content domains and cognitive levels. It ensures construct validity &mdash; the test measures what it claims to measure. Every well-designed standardized test starts with a blueprint that specifies:</p>
+<ul>
+<li>Content domain distribution (which standards, what percentage)</li>
+<li>Cognitive complexity distribution (DOK levels)</li>
+<li>Item types (selected response, constructed response, technology-enhanced)</li>
+<li>Total number of items and testing time</li>
+</ul>
+</div>
+
+<div class="content-card">
+<h3>Item Writing Principles</h3>
+<ul>
+<li>Each item should measure a <strong>single learning objective/PE</strong></li>
+<li>Stems should be clearly worded, free of ambiguity, and avoid double negatives</li>
+<li>All distractors (wrong answers) should be plausible and based on common misconceptions</li>
+<li>Items should be independent (no item gives away the answer to another)</li>
+<li>Avoid &ldquo;all of the above&rdquo; or &ldquo;none of the above&rdquo;</li>
+<li>For NGSS specifically, items should be <strong>three-dimensional</strong> &mdash; integrating a Disciplinary Core Idea (DCI), a Science and Engineering Practice (SEP), and a Crosscutting Concept (CCC)</li>
+</ul>
+</div>
+
+<div class="content-card">
+<h3>Webb's Depth of Knowledge (DOK) Framework</h3>
+<div class="table-wrap"><table>
+<tr><th>DOK Level</th><th>Description</th><th>Science Example</th></tr>
+<tr><td><span class="badge badge-dok1">DOK 1 &mdash; Recall</span></td><td>Recall a fact, definition, term, or simple procedure</td><td>&ldquo;What is the basic unit of all living things?&rdquo;</td></tr>
+<tr><td><span class="badge badge-dok2">DOK 2 &mdash; Skill/Concept</span></td><td>Use information, apply concepts, compare, classify, organize</td><td>&ldquo;Based on the data table, which material is most dense?&rdquo;</td></tr>
+<tr><td><span class="badge badge-dok3">DOK 3 &mdash; Strategic Thinking</span></td><td>Reasoning, planning, developing explanations, analyzing evidence</td><td>&ldquo;Design an investigation to test whether...&rdquo;</td></tr>
+<tr><td><span class="badge" style="background:#f1f5f9">DOK 4 &mdash; Extended</span></td><td>Investigate, synthesize across multiple sources (NOT used on standardized tests)</td><td>Multi-week research projects</td></tr>
+</table></div>
+<p style="margin-top:12px"><strong>Key insight:</strong> NGSS-aligned assessments emphasize DOK 2 and DOK 3 more heavily than traditional tests. Wisconsin's Forward Exam uses NO DOK 1 items at all.</p>
+</div>
+
+<div class="content-card">
+<h3>Recommended Difficulty Distribution</h3>
+<div class="table-wrap"><table>
+<tr><th>DOK Level</th><th>Recommended %</th><th>For a 40-Item Test</th></tr>
+<tr><td>DOK 1 (Recall)</td><td>15&ndash;20%</td><td>6&ndash;8 items</td></tr>
+<tr><td>DOK 2 (Skill/Concept)</td><td>50&ndash;60%</td><td>20&ndash;24 items</td></tr>
+<tr><td>DOK 3 (Strategic Thinking)</td><td>25&ndash;30%</td><td>10&ndash;12 items</td></tr>
+<tr><td>DOK 4 (Extended)</td><td>0% (classroom only)</td><td>0 items</td></tr>
+</table></div>
+</div>
+
+<div class="content-card">
+<h3>Classical Difficulty (P-value) Distribution</h3>
+<div class="table-wrap"><table>
+<tr><th>Difficulty Band</th><th>P-value Range</th><th>Target Percentage</th></tr>
+<tr><td>Hard</td><td>0.40&ndash;0.60</td><td>~20%</td></tr>
+<tr><td>Medium</td><td>0.60&ndash;0.80</td><td>~60%</td></tr>
+<tr><td>Easy</td><td>0.80&ndash;1.00</td><td>~20%</td></tr>
+</table></div>
+</div>
+
+<div class="content-card">
+<h3>Comparable NGSS-Aligned State Tests</h3>
+<div class="table-wrap"><table>
+<tr><th>State Test</th><th>Grade</th><th>Total Items/Points</th><th>Testing Time</th></tr>
+<tr><td>CAST (California)</td><td>5</td><td>54&ndash;58 score points</td><td>~2 hours</td></tr>
+<tr><td>STAAR (Texas, TEKS-aligned)</td><td>5</td><td>36 items</td><td>~4 hours allotted</td></tr>
+<tr><td>NJSLA-S (New Jersey)</td><td>5</td><td>~40 items</td><td>~2 hours</td></tr>
+<tr><td>SC READY (South Carolina)</td><td>4 (NGSS-aligned)</td><td>~45 items</td><td>~2 hours</td></tr>
+</table></div>
+<p style="margin-top:12px"><strong>Recommended test length:</strong> 36&ndash;44 items with a testing time of 90&ndash;120 minutes.</p>
+</div>
+
+<div class="content-card">
+<h3>Reliability &amp; Validity</h3>
+<ul>
+<li><strong>Content validity</strong> is ensured by the blueprint (adequate coverage of all assessed PEs)</li>
+<li><strong>Item analysis</strong> post-administration should examine: difficulty index (p-value), discrimination index, and distractor analysis</li>
+<li>A <strong>reliable test</strong> produces consistent results across administrations</li>
+</ul>
+</div>
+</div>
+
+<!-- IMAGE STRATEGY -->
+<div class="page" id="page-images">
+<h2 class="page-title">Image Strategy</h2>
+<p class="page-subtitle">How to handle the visual component of assessment items.</p>
+
+<div class="content-card">
+<h3>The Image Challenge</h3>
+<p>In the 2021 STAAR test, approximately <strong>18 out of 36 questions (50%)</strong> included an image or diagram. For NGSS-aligned tests, the need for visuals is even higher because NGSS emphasizes:</p>
+<ul>
+<li><strong>Models</strong> (5-PS1-1, 5-LS2-1, 5-ESS2-1 &mdash; &ldquo;develop a model&rdquo;)</li>
+<li><strong>Graphical data</strong> (5-ESS1-2, 5-ESS2-2 &mdash; &ldquo;represent data in graphical displays&rdquo;)</li>
+<li><strong>Investigation setups</strong> (5-PS1-3, 5-PS1-4, 3-5-ETS1-3)</li>
+</ul>
+</div>
+
+<div class="content-card">
+<h3>New Questions: Image Requirements</h3>
+<div class="bar-chart">
+<div class="bar-row"><span class="bar-label">Text-only (ready now)</span><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--strong)">12 questions</div></div><span class="bar-value">63%</span></div>
+<div class="bar-row"><span class="bar-label">Image recommended</span><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--partial)">7 questions</div></div><span class="bar-value">37%</span></div>
+</div>
+<p style="margin-top:8px;font-size:13px;color:var(--muted)">Use the Question Bank filters (Image Status) to see exactly which questions need images.</p>
+</div>
+
+<div class="content-card">
+<h3>Recommended Image Sourcing Strategies</h3>
+<div class="table-wrap"><table>
+<tr><th>Strategy</th><th>Details</th><th>Cost</th></tr>
+<tr><td><strong>Commission a graphic designer</strong></td><td>Clean, standardized-test-style diagrams (line art, labeled diagrams). Provide detailed descriptions.</td><td>$15&ndash;50/image</td></tr>
+<tr><td><strong>AI image generation</strong></td><td>DALL-E, Midjourney, or Adobe Firefly. Best for: food webs, ecosystem diagrams. Less reliable for precise data charts.</td><td>$0&ndash;30/month</td></tr>
+<tr><td><strong>Open-source textbooks</strong></td><td>OpenStax, CK-12, and Wikimedia Commons offer Creative Commons-licensed science images.</td><td>Free</td></tr>
+<tr><td><strong>Spreadsheet software</strong></td><td>For bar graphs, pie charts, data tables (5-ESS1-2, 5-ESS2-2), create in Excel/Sheets and export.</td><td>Free</td></tr>
+<tr><td><strong>State test image templates</strong></td><td>Study CAST, NJSLA-S, and STAAR visual style, then recreate similar styles.</td><td>Free</td></tr>
+<tr><td><strong>STAAR images directly</strong></td><td>For the 12 reused STAAR items, original images are in the PDF. (Check TEA licensing terms.)</td><td>Free</td></tr>
+</table></div>
+</div>
+
+<div class="content-card">
+<h3>Phased Deployment</h3>
+<div class="tier-section">
+<div class="tier-card"><h4>Phase 1 &mdash; Immediate</h4><p>Deploy 12 text-only new questions + 12 strong-match STAAR questions = <strong>24 items ready now</strong></p></div>
+<div class="tier-card"><h4>Phase 2 &mdash; Short-term (1&ndash;2 weeks)</h4><p>Create images for 7 image-recommended questions. Deploy 9 modified STAAR questions. <strong>Total = 40 items.</strong></p></div>
+<div class="tier-card"><h4>Phase 3 &mdash; Ongoing</h4><p>Build an expanding item bank (target 80&ndash;120 items for form rotation). Source from CAST/NJSLA-S. Write new items yearly. Conduct item analysis after each administration.</p></div>
+</div>
+</div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ===== QUESTION DATA =====
+const questions = [
+// --- STAAR STRONG MATCH (12) ---
+{id:"S2",source:"STAAR",match:"Strong",qNum:"STAAR Q2",teks:"5.8(C)",domain:"ESS",pe:"5-ESS1-2",dok:1,
+stem:"Earth continuously rotates on its axis while also moving in an orbit. About how much time does it take for Earth to make one complete rotation on its axis?",
+choices:["24 hours","30 days","60 minutes","365 days"],letters:["F","G","H","J"],correct:0,
+explanation:"Earth completes one full rotation on its axis approximately every 24 hours, which is what defines a day. 30 days approximates a lunar cycle, 60 minutes is one hour, and 365 days is the time for one orbit around the sun (a year).",
+sep:"Analyzing and Interpreting Data",ccc:"Patterns",imageNeeded:false,imageDesc:""},
+
+{id:"S4",source:"STAAR",match:"Strong",qNum:"STAAR Q4",teks:"5.5(A)",domain:"PS",pe:"5-PS1-3",dok:2,
+stem:"A table of different properties of four samples of matter is shown.\n\n| Sample | Conducts Electricity | Conducts Heat | Soluble in Water | State at Room Temp |\n|--------|---------------------|---------------|-----------------|-------------------|\n| 1 | No | No | Yes | Solid |\n| 2 | Yes | Yes | No | Solid |\n| 3 | No | Yes | Yes | Liquid |\n| 4 | Yes | Yes | No | Liquid |\n\nWhich conclusion can be made about the samples based on the table?",
+choices:["Sample 1 is made of plastic.","Sample 2 is made of metal.","Sample 3 is attracted to magnets.","Sample 4 is less dense than water."],letters:["F","G","H","J"],correct:1,
+explanation:"Sample 2 conducts both electricity and heat and is a solid at room temperature \u2014 these are characteristic properties of metals. The other conclusions cannot be reliably supported by the data given.",
+sep:"Analyzing and Interpreting Data",ccc:"Patterns",imageNeeded:false,imageDesc:""},
+
+{id:"S9",source:"STAAR",match:"Strong",qNum:"STAAR Q9",teks:"5.9(B)",domain:"LS",pe:"5-LS2-1 / 5-PS3-1",dok:2,
+stem:"Students researching the relationships between some organisms in the Lavaca Bay ecosystem in Texas made a partial food web showing: Bald eagles and Spotted sandpipers eat Hermit crabs and Swamp sparrows; Swamp sparrows eat Swamp rabbits; Swamp rabbits eat Wiregrass and Clover grass; Hermit crabs and Blue crabs eat Phytoplankton; Blue crabs also eat Wiregrass.\n\nWhich of these lists contains only organisms that receive some of their energy directly from other organisms that produce their own food?",
+choices:["Bald eagles and spotted sandpipers","Swamp rabbits, hermit crabs, and swamp sparrows","Phytoplankton, hermit crabs, and blue crabs","Wiregrass, clover grass, and phytoplankton"],letters:["A","B","C","D"],correct:1,
+explanation:"Organisms that produce their own food are the producers: wiregrass, clover grass, and phytoplankton. Swamp rabbits eat wiregrass/clover grass directly, and hermit crabs and swamp sparrows eat organisms that feed on producers. The key is 'directly from producers' \u2014 swamp rabbits eat plants, hermit crabs eat phytoplankton, making them primary consumers.",
+sep:"Developing and Using Models",ccc:"Energy and Matter",imageNeeded:true,imageDesc:"Food web diagram showing Lavaca Bay organisms with arrows indicating energy flow"},
+
+{id:"S16",source:"STAAR",match:"Strong",qNum:"STAAR Q16",teks:"5.5(A)",domain:"PS",pe:"5-PS1-3",dok:2,
+stem:"A student compares the physical properties of four objects: a Rock, a Rubber eraser, a Paper cup, and a Wooden block.\n\nWhich of these physical properties do all four objects have in common?",
+choices:["They all have the same physical state and conduct electricity.","They all conduct electricity and attract the same metal objects.","They all attract the same metal objects and are not soluble in water.","They all are not soluble in water and have the same physical state."],letters:["F","G","H","J"],correct:3,
+explanation:"All four objects are solids (same physical state) and none of them dissolve in water (not soluble). None of them conduct electricity, and none attract metal objects magnetically, so the properties they share are physical state and insolubility in water.",
+sep:"Planning and Carrying Out Investigations",ccc:"Patterns",imageNeeded:true,imageDesc:"Photos or illustrations of a rock, rubber eraser, paper cup, and wooden block"},
+
+{id:"S18",source:"STAAR",match:"Strong",qNum:"STAAR Q18",teks:"5.8(B)",domain:"ESS",pe:"5-ESS2-2 / 5-ESS2-1",dok:2,
+stem:"Which process will happen when the sun interacts with the ocean?",
+choices:["Rain will fall only on the land.","Water will not evaporate at nighttime.","Salt water will become fresh water vapor.","Precipitation will happen less often."],letters:["F","G","H","J"],correct:2,
+explanation:"When the sun heats the ocean, water evaporates. During evaporation, the salt is left behind \u2014 only the water molecules become vapor. This is how the water cycle naturally desalinates ocean water, turning salt water into fresh water vapor that later forms clouds and precipitation.",
+sep:"Developing and Using Models",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""},
+
+{id:"S19",source:"STAAR",match:"Strong",qNum:"STAAR Q19",teks:"5.9(B)",domain:"LS",pe:"5-PS3-1 / 5-LS2-1",dok:2,
+stem:"A partial desert food web is shown with: Cheetahs and Barn owls at the top; Spotted hyenas in the middle; Mountain zebras, Gemsboks, and Grant's golden moles as herbivores/insectivores; Termites as insects; and Desert grasses and shrubs as producers.\n\nWhich food chain shows one complete pathway in which energy flows through this food web?",
+choices:["Desert grasses and shrubs \u2192 termites \u2192 barn owls","Desert grasses and shrubs \u2192 mountain zebras \u2192 cheetahs","Desert grasses and shrubs \u2192 termites \u2192 spotted hyenas","Desert grasses and shrubs \u2192 gemsboks \u2192 Grant's golden moles"],letters:["A","B","C","D"],correct:1,
+explanation:"A food chain must show a complete, logical pathway of energy transfer: producer \u2192 primary consumer \u2192 secondary consumer. Desert grasses (producer) \u2192 mountain zebras (herbivore/primary consumer) \u2192 cheetahs (predator/secondary consumer) represents a valid energy flow pathway in this food web.",
+sep:"Developing and Using Models",ccc:"Energy and Matter",imageNeeded:true,imageDesc:"Desert food web diagram with arrows showing energy flow"},
+
+{id:"S22",source:"STAAR",match:"Strong",qNum:"STAAR Q22",teks:"5.9(A)",domain:"LS",pe:"5-LS2-1 / 5-ESS2-1",dok:2,
+stem:"The chart lists plants and animals interacting with parts of an environment:\n\n1. A hummingbird dips its beak inside a flower.\n2. A lizard burrows into the sand to stay cool.\n3. A fish absorbs oxygen through its gills.\n4. A cactus wren eats seeds from a cactus fruit.\n5. A sea star clings to a rock in a tidal pool.\n6. A bear scratches its back against a tree.\n\nWhich statements describe an animal interacting with a living part of the environment?",
+choices:["Statements 1, 4, and 6 only","Statements 1, 3, and 5 only","Statements 2, 5, and 6 only","Statements 2, 3, and 4 only"],letters:["F","G","H","J"],correct:0,
+explanation:"Living (biotic) parts of the environment include other organisms. Statement 1: flower (living). Statement 4: cactus fruit (living). Statement 6: tree (living). Sand (2), water/oxygen (3), and rock (5) are all nonliving (abiotic) components.",
+sep:"Analyzing and Interpreting Data",ccc:"Systems and System Models",imageNeeded:false,imageDesc:""},
+
+{id:"S23",source:"STAAR",match:"Strong",qNum:"STAAR Q23",teks:"5.8(C)",domain:"ESS",pe:"5-ESS1-2",dok:2,
+stem:"A student drew pictures to show the day-night cycle of Earth.\n\nSunrise: 7:10 AM | 11 hours of daytime | Sunset: 6:10 PM\nNighttime: ? hours\n\nBased on the pictures, how many hours should the student record on the nighttime picture to complete a day-night cycle?",
+choices:["11 hours","12 hours","13 hours","24 hours"],letters:["A","B","C","D"],correct:2,
+explanation:"A complete day-night cycle is 24 hours. If daytime lasts 11 hours (from 7:10 AM to 6:10 PM), then nighttime = 24 - 11 = 13 hours. This connects to the pattern that day and night together always equal approximately 24 hours due to Earth's rotation.",
+sep:"Using Mathematics and Computational Thinking",ccc:"Patterns",imageNeeded:true,imageDesc:"Diagram showing Earth's day-night cycle with sunrise/sunset times"},
+
+{id:"S27",source:"STAAR",match:"Strong",qNum:"STAAR Q27",teks:"5.5(A)",domain:"PS",pe:"5-PS1-3",dok:2,
+stem:"A group of students is given four small cubes of the same size and instructed to place them in a beaker of water. One cube floats to the surface of the water. Two of the cubes float in the middle of the beaker under the surface of the water. The last cube sinks to the bottom of the beaker.\n\nWhich conclusion is best supported by what the students observed?",
+choices:["Two of the four cubes are soluble in water.","All four cubes have different masses.","Each cube is made of a different type of solid material.","One of the cubes is more dense than the other three."],letters:["A","B","C","D"],correct:3,
+explanation:"Since all cubes are the same size but behave differently in water, their densities must differ. The cube that sinks is denser than water, while the floating cubes are less dense. The one that sinks to the bottom is more dense than the other three. This demonstrates that density is a property that can be used to identify and compare materials.",
+sep:"Analyzing and Interpreting Data",ccc:"Scale, Proportion, and Quantity",imageNeeded:false,imageDesc:""},
+
+{id:"S28",source:"STAAR",match:"Strong",qNum:"STAAR Q28",teks:"5.9(C)",domain:"ESS",pe:"5-ESS3-1",dok:2,
+stem:"Which effect would most likely occur if a six-lane highway were built through an ecosystem?",
+choices:["Competition for resources would be reduced.","Habitats available to animals would be reduced.","Air pollution would decrease.","Water pollution would decrease."],letters:["F","G","H","J"],correct:1,
+explanation:"Building a highway through an ecosystem directly destroys habitat, fragmenting the ecosystem and reducing the available living space for animals. This is a classic example of how human activity impacts the environment \u2014 a core concept in 5-ESS3-1 about understanding human impacts and protecting resources.",
+sep:"Obtaining, Evaluating, and Communicating Information",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""},
+
+{id:"S32",source:"STAAR",match:"Strong",qNum:"STAAR Q32",teks:"5.5(B)",domain:"PS",pe:"5-PS1-2",dok:2,
+stem:"A student mixes a sample of stones with a sample of table salt. The mass and volume of the samples were determined before mixing:\n\n| Material | Grams (g) | Milliliters (mL) |\n|----------|-----------|------------------|\n| Stones | 45 | 25 |\n| Salt | 40 | 35 |\n\nWhich statement is true about the mixture?",
+choices:["The mass of the mixture is 85 grams.","The mass of the mixture is 60 milliliters.","The volume of the mixture is 60 grams.","The volume of the mixture is 85 milliliters."],letters:["F","G","H","J"],correct:0,
+explanation:"The total mass of the mixture = 45 g + 40 g = 85 grams. Mass is conserved when substances are mixed \u2014 the total mass equals the sum of the individual masses. The other choices confuse mass (grams) and volume (milliliters) units.",
+sep:"Using Mathematics and Computational Thinking",ccc:"Scale, Proportion, and Quantity",imageNeeded:false,imageDesc:""},
+
+{id:"S33",source:"STAAR",match:"Strong",qNum:"STAAR Q33",teks:"5.9(A)",domain:"LS",pe:"5-LS2-1 / 5-LS1-1",dok:2,
+stem:"A student's model of a closed ecosystem includes: rock, sand, water, shredded newspaper for food, and gravel. The student plans to add land snails to the model in order to show how the snails interact with different parts of the ecosystem.\n\nWhat should the student add to the model so that the snails will survive?",
+choices:["Fish to provide food","Sticks to provide a place to hide","Deep water to provide carbon dioxide","Living plants to provide oxygen"],letters:["A","B","C","D"],correct:3,
+explanation:"In a closed ecosystem, snails need oxygen to survive. Living plants produce oxygen through photosynthesis and also absorb the carbon dioxide that snails release. This demonstrates the cycling of matter between organisms \u2014 plants and animals depend on each other for the gases they need.",
+sep:"Developing and Using Models",ccc:"Systems and System Models",imageNeeded:true,imageDesc:"Diagram of closed ecosystem terrarium with labeled components"},
+
+// --- STAAR PARTIAL MATCH (9) ---
+{id:"S1",source:"STAAR",match:"Partial",qNum:"STAAR Q1",teks:"5.6(A)",domain:"ESS",pe:"5-ESS2-1",dok:1,
+stem:"A student recorded the time it took for all the water in a puddle on a sidewalk to evaporate after a rain. Which kind of energy causes water to evaporate?",
+choices:["Light energy from streetlights","Sound energy from passing cars","Thermal energy from the environment","Mechanical energy from nearby streets"],letters:["A","B","C","D"],correct:2,
+explanation:"Thermal energy (heat) from the environment causes water molecules to gain enough energy to change from liquid to gas (evaporate). This connects to how Earth's systems interact \u2014 the atmosphere's thermal energy drives the water cycle by evaporating water from the hydrosphere.",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Reframe to emphasize Earth system interactions (atmosphere/hydrosphere) for full NGSS alignment."},
+
+{id:"S7",source:"STAAR",match:"Partial",qNum:"STAAR Q7",teks:"5.7(B)",domain:"ESS",pe:"5-ESS2-1",dok:2,
+stem:"Canyons and mesas are two landforms found in the western part of the United States. Which statement best describes how canyons and mesas are similar?",
+choices:["Both were formed by slow-moving glaciers.","Both were formed by erosion by wind and water.","Both were part of a mountain that was weathered by ice.","Both were part of a desert that was reshaped by a flood."],letters:["A","B","C","D"],correct:1,
+explanation:"Both canyons and mesas are formed primarily through erosion by wind and water over long periods of time. This demonstrates how the geosphere interacts with the hydrosphere and atmosphere \u2014 a key concept in 5-ESS2-1.",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Add context about geosphere/atmosphere/hydrosphere interactions for NGSS three-dimensionality."},
+
+{id:"S11",source:"STAAR",match:"Partial",qNum:"STAAR Q11",teks:"3.5(C)",domain:"PS",pe:"5-PS1-1",dok:2,
+stem:"Students observe a glass of ice and water. The glass is dry on the outside. After ten minutes students see drops of water on the outside of the glass.\n\nWhich statement best explains the students' observations?",
+choices:["The water vapor in the air changes to a liquid when it touches the cold glass.","The cold water inside the glass rises and then slides down the outside of the glass.","The ice in the glass melted and caused the water to overflow the glass.","The water moved to the outside surface through tiny holes in the glass."],letters:["A","B","C","D"],correct:0,
+explanation:"Water vapor (gas) in the air condenses into liquid water when it contacts the cold surface of the glass. This demonstrates that matter is made of particles \u2014 water vapor particles in the air slow down when cooled, changing from gas to liquid state on the glass surface.",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Reframe to connect to the particle model of matter (5-PS1-1) rather than simple state change recall."},
+
+{id:"S21",source:"STAAR",match:"Partial",qNum:"STAAR Q21",teks:"5.5(C)",domain:"PS",pe:"5-PS1-4",dok:2,
+stem:"A student prepared a snack that consisted of grapes, pecans, and strawberries sprinkled with white powdered sugar. The student stored the snack in a refrigerator. An hour later the student observed that the powdered sugar could no longer be seen but the fruit and nuts had not changed in appearance.\n\nWhat most likely happened to the sugar in the mixture?",
+choices:["The sugar evaporated at the lower temperature in the refrigerator without causing any changes to the fruit and nuts.","The sugar was more dense than the other foods in the mixture, so it settled to the bottom of the container.","The sugar dissolved in the moisture on the fruit.","The sugar absorbed energy from the nuts and melted into a colorless liquid."],letters:["A","B","C","D"],correct:2,
+explanation:"The powdered sugar dissolved in the moisture present on the surface of the fruit. Dissolving is a physical process where the sugar mixes with water at the molecular level. This is relevant to 5-PS1-4 because it demonstrates that mixing substances doesn't always create a new substance \u2014 the sugar is still sugar, just dissolved.",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Pair with a question about chemical changes to contrast physical vs. chemical mixing for full 5-PS1-4 alignment."},
+
+{id:"S25",source:"STAAR",match:"Partial",qNum:"STAAR Q25",teks:"3.9(A)",domain:"LS",pe:"5-LS2-1",dok:2,
+stem:"White oak trees grow to be 24 to 30 meters tall. Their long branches are covered with leaves, and their roots reach deep into the soil. White oaks drop their leaves during winter.\n\n| Ecosystem | Temperature | Yearly Precipitation | Soil |\n|-----------|-------------|---------------------|------|\n| 1 | Long cold winters below 0\u00b0C, short cool summers | Less than 25 cm | Thin topsoil; frozen ground |\n| 2 | Warm year-round, very hot summer | Less than 28 cm | Sandy, rocky |\n| 3 | Cold-to-moderate winters, warm summers | 76\u2013152 cm | Rich, deep |\n| 4 | Warm and wet year-round | 200\u20131000 cm | Drains quickly; thin humus |\n\nIn which ecosystem would forests of white oak trees be most likely to survive?",
+choices:["Ecosystem 1","Ecosystem 2","Ecosystem 3","Ecosystem 4"],letters:["A","B","C","D"],correct:2,
+explanation:"Ecosystem 3 has moderate temperatures with seasonal variation (matching the deciduous nature of white oaks), adequate rainfall (76-152 cm), and rich deep soil suitable for deep roots. This connects to how organisms interact with their environment and how matter cycles through ecosystems.",
+sep:"Analyzing and Interpreting Data",ccc:"Systems and System Models",imageNeeded:false,imageDesc:"",
+modNote:"Reframe around ecosystem interactions and matter/energy cycling for stronger 5-LS2-1 alignment."},
+
+{id:"S26",source:"STAAR",match:"Partial",qNum:"STAAR Q26",teks:"5.7(A)",domain:"ESS",pe:"5-ESS2-1",dok:2,
+stem:"A three-step process is shown: Deposition \u2192 Compaction \u2192 Cementation\n\nWhich of these are most likely formed by the process shown?",
+choices:["Glaciers","Mountains","Sand dunes","Sedimentary rocks"],letters:["F","G","H","J"],correct:3,
+explanation:"The sequence of deposition (sediments settling), compaction (pressure squeezing layers together), and cementation (minerals binding sediments) is exactly how sedimentary rocks form. This demonstrates geosphere processes \u2014 how Earth's systems interact to create landforms over time.",
+sep:"Developing and Using Models",ccc:"Stability and Change",imageNeeded:false,imageDesc:"",
+modNote:"Emphasize this as a geosphere process connecting to the broader Earth systems model for 5-ESS2-1."},
+
+{id:"S31",source:"STAAR",match:"Partial",qNum:"STAAR Q31",teks:"4.7(C)",domain:"ESS",pe:"5-ESS3-1",dok:1,
+stem:"Students list resources that are used to heat buildings: Wood, Coal, Natural gas, Petroleum, Solar energy.\n\nWhich of these tables correctly classifies the resources?\n\nA) Renewable: Solar energy, Wood | Nonrenewable: Coal, Petroleum, Natural gas\nB) Renewable: Solar energy, Natural gas | Nonrenewable: Coal, Petroleum, Wood\nC) Renewable: Wood, Solar energy, Coal | Nonrenewable: Petroleum, Natural gas\nD) Renewable: Petroleum, Natural gas | Nonrenewable: Solar energy, Wood, Coal",
+choices:["Renewable: Solar energy, Wood | Nonrenewable: Coal, Petroleum, Natural gas","Renewable: Solar energy, Natural gas | Nonrenewable: Coal, Petroleum, Wood","Renewable: Wood, Solar energy, Coal | Nonrenewable: Petroleum, Natural gas","Renewable: Petroleum, Natural gas | Nonrenewable: Solar energy, Wood, Coal"],letters:["A","B","C","D"],correct:0,
+explanation:"Solar energy and wood are renewable resources (can be replenished naturally in a reasonable time). Coal, petroleum, and natural gas are nonrenewable fossil fuels that take millions of years to form. Understanding resource classification connects to 5-ESS3-1 about how communities protect Earth's resources.",
+sep:"Obtaining, Evaluating, and Communicating Information",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Extend with a follow-up about how communities choose between renewable and nonrenewable resources."},
+
+{id:"S34",source:"STAAR",match:"Partial",qNum:"STAAR Q34",teks:"5.7(B)",domain:"ESS",pe:"5-ESS2-1",dok:2,
+stem:"Deltas are large landforms found along coastlines. What process forms deltas?",
+choices:["Cementation of sediments by rivers","Deposition of sediments by rivers","Erosion of sediments by ocean waves","Deposition of sediments by ocean waves"],letters:["F","G","H","J"],correct:1,
+explanation:"Deltas form when rivers deposit sediments at their mouths where they meet the ocean or a lake. As the river slows, it can no longer carry its sediment load, so the material settles. This is a key example of how the geosphere and hydrosphere interact (5-ESS2-1).",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:"",
+modNote:"Frame as a geosphere-hydrosphere interaction example for three-dimensional NGSS alignment."},
+
+{id:"S36",source:"STAAR",match:"Partial",qNum:"STAAR Q36",teks:"5.7(A)",domain:"ESS",pe:"5-ESS2-1",dok:2,
+stem:"Sediments are transported at different speeds. Which type of sediment transport is the slowest?",
+choices:["Transport by rivers","Transport by winds","Transport by glaciers","Transport by ocean currents"],letters:["F","G","H","J"],correct:2,
+explanation:"Glaciers transport sediments extremely slowly compared to rivers, wind, and ocean currents. Glaciers move inches to feet per day, while rivers can move sediments miles in hours. This shows how different Earth systems (hydrosphere as ice, atmosphere as wind, hydrosphere as liquid water) shape the geosphere at different rates.",
+sep:"Analyzing and Interpreting Data",ccc:"Scale, Proportion, and Quantity",imageNeeded:false,imageDesc:"",
+modNote:"Reframe to compare rates of geosphere change driven by different Earth systems."},
+
+// --- GENERATED QUESTIONS (19) ---
+{id:"N1",source:"Generated",match:"Generated",qNum:"New Q1",domain:"PS",pe:"5-PS1-1",dok:2,
+stem:"A student adds a few drops of food coloring to a glass of still water. Without stirring, the color slowly spreads throughout the entire glass over several minutes.\n\nWhich statement best explains why the food coloring spreads without being stirred?",
+choices:["The water pushes the food coloring to the edges of the glass.","The particles that make up both the water and the food coloring are constantly moving and mixing together.","The food coloring evaporates and then condenses in other parts of the water.","Light passing through the glass causes the food coloring to change position."],letters:["A","B","C","D"],correct:1,
+explanation:"Matter is made of tiny particles that are too small to see but are always in motion. The food coloring particles and water particles mix naturally because all particles in a liquid are constantly moving (this is called diffusion). No stirring is needed because the particle motion does the mixing.",
+sep:"Constructing Explanations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""},
+
+{id:"N2",source:"Generated",match:"Generated",qNum:"New Q2",domain:"PS",pe:"5-PS1-2",dok:2,
+stem:"A student places an empty sealed plastic bag on a balance and records its mass as 15 grams. The student then opens the bag, places two effervescent tablets and 50 mL of water inside, and quickly seals the bag again. The tablets dissolve and gas bubbles form inside the sealed bag.\n\nWhat will the balance most likely show as the mass of the sealed bag after the tablets have completely dissolved?",
+choices:["Less than 65 grams, because some matter was destroyed when the tablets dissolved","Exactly 65 grams, because matter is not created or destroyed when substances interact","More than 65 grams, because the gas adds extra mass to the bag","Exactly 50 grams, because the tablets disappeared into the water"],letters:["F","G","H","J"],correct:1,
+explanation:"The total mass of matter is conserved regardless of the type of change. The bag (15g) + water (50g, since 1 mL of water \u2248 1g) + tablets = 65g total. Even though gas formed and the tablets dissolved, no matter left the sealed bag \u2014 so the mass stays exactly the same. This is the law of conservation of matter.",
+sep:"Using Mathematics and Computational Thinking",ccc:"Scale, Proportion, and Quantity",imageNeeded:false,imageDesc:""},
+
+{id:"N3",source:"Generated",match:"Generated",qNum:"New Q3",domain:"PS",pe:"5-PS1-4",dok:2,
+stem:"Students mix baking soda with vinegar in a cup. They observe bubbles forming, the mixture getting colder, and a fizzing sound. They also mix sand with water in a separate cup and observe the sand settling to the bottom.\n\nWhich statement best compares these two mixtures?",
+choices:["Both mixtures resulted in new substances being formed.","Neither mixture resulted in a new substance being formed.","The baking soda and vinegar formed a new substance, but the sand and water did not.","The sand and water formed a new substance, but the baking soda and vinegar did not."],letters:["A","B","C","D"],correct:2,
+explanation:"When baking soda and vinegar are mixed, a chemical reaction occurs \u2014 evidenced by gas production (bubbles/fizzing) and temperature change. A new substance (carbon dioxide gas) is created. When sand is mixed with water, the sand simply settles \u2014 no new substance forms, and the sand can be easily separated. This is the key distinction 5-PS1-4 addresses.",
+sep:"Planning and Carrying Out Investigations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""},
+
+{id:"N4",source:"Generated",match:"Generated",qNum:"New Q4",domain:"PS",pe:"5-PS2-1",dok:2,
+stem:"A student places a ball on a flat table. The ball does not move. The student then places the same ball at the top of a ramp. The ball immediately begins rolling down the ramp toward the ground.\n\nWhich statement best explains why the ball rolls down the ramp?",
+choices:["The ramp pushes the ball forward with a contact force.","The gravitational force exerted by Earth pulls the ball downward, toward the center of Earth.","Air pressure at the top of the ramp is greater than at the bottom, pushing the ball down.","The ball has more energy at the top of the ramp because it is farther from the sun."],letters:["F","G","H","J"],correct:1,
+explanation:"Earth's gravitational force pulls all objects downward, toward the center of Earth. On a flat table, the table supports the ball against gravity. On a ramp, the downward gravitational pull causes the ball to accelerate along the ramp's surface because the ramp doesn't fully oppose the downward force. This is the core concept of 5-PS2-1.",
+sep:"Engaging in Argument from Evidence",ccc:"Cause and Effect",imageNeeded:true,imageDesc:"Diagram showing a ball on a flat table (stationary) and the same ball at the top of a ramp (rolling down), with an arrow showing the direction of gravitational force pointing downward"},
+
+{id:"N5",source:"Generated",match:"Generated",qNum:"New Q5",domain:"PS",pe:"5-PS2-1",dok:3,
+stem:"A student argues that if Earth is a sphere, a person standing on the bottom of Earth would fall off into space.\n\nWhich statement provides the best evidence against this argument?",
+choices:["Earth's atmosphere holds people to the surface on all sides of the planet.","People on the other side of Earth are actually upside down but are used to it.","Gravitational force pulls all objects toward the center of Earth, so \"down\" is always toward Earth's center no matter where a person stands.","The magnetic field of Earth holds all objects on the surface in place."],letters:["A","B","C","D"],correct:2,
+explanation:"Gravitational force is always directed toward the center of Earth. There is no absolute \"up\" or \"down\" in space \u2014 for every person on Earth, \"down\" means toward the center of the planet. A person on the opposite side of Earth feels gravity pulling them toward the center just like everyone else. This directly addresses the 5-PS2-1 concept that gravity is directed downward (toward Earth's center).",
+sep:"Engaging in Argument from Evidence",ccc:"Cause and Effect",imageNeeded:true,imageDesc:"Diagram of Earth as a sphere with stick figures standing at different positions (top, sides, bottom), each with an arrow pointing toward the center of Earth labeled 'gravity'"},
+
+{id:"N6",source:"Generated",match:"Generated",qNum:"New Q6",domain:"LS",pe:"5-LS1-1",dok:2,
+stem:"A student plants a small seedling in a pot of dry soil. Over several weeks, the student waters the plant regularly and keeps it in sunlight. The plant grows to be much larger and heavier than the original seedling.\n\nWhere did most of the new material that makes up the larger plant come from?",
+choices:["Minerals absorbed from the soil","Water absorbed through the roots and carbon dioxide absorbed from the air","Sunlight absorbed through the leaves","Nutrients in the water used to water the plant"],letters:["F","G","H","J"],correct:1,
+explanation:"Plants get the materials they need for growth chiefly from air (carbon dioxide) and water. Through photosynthesis, plants use energy from sunlight to convert CO\u2082 and water into sugars and other organic molecules that make up the plant's body. While soil minerals help, they contribute very little to the plant's total mass compared to air and water.",
+sep:"Engaging in Argument from Evidence",ccc:"Energy and Matter",imageNeeded:false,imageDesc:""},
+
+{id:"N7",source:"Generated",match:"Generated",qNum:"New Q7",domain:"LS",pe:"5-LS1-1",dok:3,
+stem:"A scientist grew a willow tree in a large pot for five years, carefully adding only water. At the start, the soil weighed 90 kg and the tree weighed 2 kg. After five years, the tree weighed 77 kg, but the soil weighed 89.9 kg \u2014 it had lost only 0.1 kg.\n\nWhich claim is best supported by this evidence?",
+choices:["The tree got almost all of its new mass from the soil.","The tree got almost all of its new mass from water and gases in the air, not from the soil.","The tree created new matter from sunlight energy alone.","The pot must have had a leak that allowed soil to escape."],letters:["A","B","C","D"],correct:1,
+explanation:"The tree gained 75 kg of mass while the soil lost only 0.1 kg. This means the soil contributed almost nothing to the tree's growth. The new mass came from water (added by the scientist) and carbon dioxide from the air. This is powerful evidence that plants get their materials chiefly from air and water, not soil \u2014 the core claim of 5-LS1-1. (This is based on the famous Van Helmont experiment from the 1600s.)",
+sep:"Engaging in Argument from Evidence",ccc:"Energy and Matter",imageNeeded:false,imageDesc:""},
+
+{id:"N8",source:"Generated",match:"Generated",qNum:"New Q8",domain:"LS",pe:"5-LS2-1",dok:3,
+stem:"In a forest ecosystem, a tree takes in carbon dioxide from the air and water from the soil to grow. A caterpillar eats the leaves of the tree. A bird eats the caterpillar. When the bird dies, decomposers break down its body.\n\nWhich statement best describes what happens to the matter from the tree's leaves throughout this process?",
+choices:["The matter is destroyed each time one organism eats another.","The matter moves from organism to organism and is eventually returned to the soil and air by decomposers.","The matter stays inside each organism permanently and is never recycled.","Only energy moves through the ecosystem; the matter stays in the tree."],letters:["F","G","H","J"],correct:1,
+explanation:"Matter cycles through ecosystems: plants take in matter from air and soil, animals get matter by eating plants or other animals, and decomposers break down dead organisms to return matter to the soil and air. Matter is never destroyed \u2014 it moves from organism to organism and back to the environment in a continuous cycle. This is the central idea of 5-LS2-1.",
+sep:"Developing and Using Models",ccc:"Energy and Matter: Flows, Cycles, and Conservation",imageNeeded:true,imageDesc:"Circular diagram showing: Sun \u2192 Tree (takes in CO\u2082 + water) \u2192 Caterpillar (eats leaves) \u2192 Bird (eats caterpillar) \u2192 Decomposers (break down bird) \u2192 Soil and Air \u2192 back to Tree"},
+
+{id:"N9",source:"Generated",match:"Generated",qNum:"New Q9",domain:"ESS",pe:"5-ESS1-1",dok:2,
+stem:"The sun appears much brighter than any other star in the night sky. However, many stars in the universe are actually larger and produce more light than the sun.\n\nWhat is the main reason the sun appears brighter than other stars?",
+choices:["The sun is the largest star in the universe.","The sun is much closer to Earth than other stars.","The sun produces a special type of light that appears brighter.","Earth's atmosphere makes the sun appear brighter than it actually is."],letters:["A","B","C","D"],correct:1,
+explanation:"The sun appears brighter simply because it is much closer to Earth than any other star. The nearest star beyond the sun (Proxima Centauri) is about 4.2 light-years away, while the sun is only about 8 light-minutes away. Distance is the key factor that determines how bright a star appears from Earth, which is exactly what 5-ESS1-1 addresses.",
+sep:"Engaging in Argument from Evidence",ccc:"Scale, Proportion, and Quantity",imageNeeded:false,imageDesc:""},
+
+{id:"N10",source:"Generated",match:"Generated",qNum:"New Q10",domain:"ESS",pe:"5-ESS1-1",dok:3,
+stem:"A student looks at the following data about three stars:\n\n| Star | Actual Light Output (compared to the sun) | Distance from Earth |\n|------|-------------------------------------------|-------------------|\n| Star A | 2 times the sun | 4 light-years |\n| Star B | 10,000 times the sun | 640 light-years |\n| Star C | 0.5 times the sun | 11 light-years |\n\nStar A appears brighter than Star B when observed from Earth, even though Star B produces much more light.\n\nWhich statement best explains this observation?",
+choices:["Star B is broken and not producing light correctly.","Earth's atmosphere blocks the light from Star B but not Star A.","Star A is much closer to Earth than Star B, so its light appears brighter even though it actually produces less light.","Star A is a newer star, so it naturally appears brighter."],letters:["F","G","H","J"],correct:2,
+explanation:"Star A is only 4 light-years away while Star B is 640 light-years away. Even though Star B produces 5,000 times more light, that light spreads out over a vastly greater distance, making it appear dimmer from Earth. This data-driven reasoning demonstrates the core concept of 5-ESS1-1: apparent brightness depends on both actual light output AND distance.",
+sep:"Analyzing and Interpreting Data",ccc:"Scale, Proportion, and Quantity",imageNeeded:true,imageDesc:"Data table showing star name, light output, and distance from Earth (table is embedded in stem text)"},
+
+{id:"N11",source:"Generated",match:"Generated",qNum:"New Q11",domain:"ESS",pe:"5-ESS1-2",dok:2,
+stem:"Students measure the length and direction of a shadow cast by a flagpole at three different times during a school day: 9:00 AM, 12:00 PM, and 3:00 PM. They notice the shadow is longest in the morning and late afternoon and shortest around noon.\n\nWhat causes the shadow to change in length during the day?",
+choices:["The flagpole grows taller during the morning and shorter in the afternoon.","The wind changes direction throughout the day, moving the shadow.","Earth's rotation changes the angle at which sunlight hits the flagpole throughout the day.","The sun moves closer to and farther from Earth during the day."],letters:["A","B","C","D"],correct:2,
+explanation:"As Earth rotates, the sun's apparent position in the sky changes throughout the day. At noon, the sun is highest, creating the shortest shadow. In morning and afternoon, the sun is lower in the sky, creating longer shadows. This daily shadow pattern is caused by Earth's rotation \u2014 a core concept in 5-ESS1-2.",
+sep:"Analyzing and Interpreting Data",ccc:"Patterns",imageNeeded:true,imageDesc:"Three diagrams showing a flagpole at 9 AM (long shadow), 12 PM (short shadow), and 3 PM (long shadow in opposite direction), with sun position shown"},
+
+{id:"N12",source:"Generated",match:"Generated",qNum:"New Q12",domain:"ESS",pe:"5-ESS2-2",dok:2,
+stem:"A student makes a model to represent all the water on Earth. The model uses 100 small cups of water. Based on scientific data, the student should fill 97 cups with salt water and only 3 cups with fresh water. Of those 3 cups of fresh water, about 2 should be frozen in ice caps and glaciers.\n\nBased on this model, which conclusion is best supported?",
+choices:["Most of Earth's water is found in rivers and lakes.","Fresh water that is available for humans to use is a very small percentage of all the water on Earth.","There is more frozen fresh water than liquid salt water on Earth.","Earth does not have enough water to support life."],letters:["F","G","H","J"],correct:1,
+explanation:"Out of 100 cups: 97 are salt water (not directly usable), 2 are frozen fresh water (ice caps/glaciers), and only about 1 cup represents all the liquid fresh water available in rivers, lakes, and groundwater. This means usable fresh water is roughly 1% of all Earth's water \u2014 a very small percentage. Understanding this distribution is the core of 5-ESS2-2.",
+sep:"Using Mathematics and Computational Thinking",ccc:"Scale, Proportion, and Quantity",imageNeeded:true,imageDesc:"Pie chart or visual model showing: 97% salt water (oceans), 2% frozen fresh water (ice caps), ~1% liquid fresh water (rivers, lakes, groundwater)"},
+
+{id:"N13",source:"Generated",match:"Generated",qNum:"New Q13",domain:"ESS",pe:"5-ESS3-1",dok:3,
+stem:"A coastal town is experiencing increased flooding during storms. Town leaders are considering two plans:\n\nPlan 1: Build a concrete sea wall along the entire coastline.\nPlan 2: Restore natural wetlands and sand dunes along the coast.\n\nA scientist explains that wetlands naturally absorb floodwater and that sand dunes act as barriers against storm waves, while sea walls can increase erosion in nearby areas.\n\nWhich statement best explains why Plan 2 uses science ideas to protect both the community and the environment?",
+choices:["Plan 2 costs less money than Plan 1.","Plan 2 uses knowledge of how natural systems work to reduce flooding while also supporting habitats for wildlife.","Plan 2 does not require any human effort to maintain.","Plan 2 will completely stop all flooding in the town forever."],letters:["A","B","C","D"],correct:1,
+explanation:"Plan 2 applies scientific understanding of natural systems (wetlands absorb water, dunes block waves) to solve a human problem while preserving ecosystems. This is exactly what 5-ESS3-1 describes: using science ideas to protect Earth's resources and environment. Plan 2 addresses both the community's need for flood protection and environmental sustainability.",
+sep:"Obtaining, Evaluating, and Communicating Information",ccc:"Systems and System Models",imageNeeded:false,imageDesc:""},
+
+{id:"N14",source:"Generated",match:"Generated",qNum:"New Q14",domain:"ETS",pe:"3-5-ETS1-1",dok:2,
+stem:"Students at a school notice that the playground gets very hot during sunny days, making the metal equipment too hot to touch. The school has a budget of $500 and wants a solution that can be set up within one week.\n\nWhich statement best defines this design problem?",
+choices:["The school needs to build an air-conditioned playground for the students.","The school needs to find a way to keep playground equipment cool enough to use safely on sunny days, using no more than $500 and within one week.","The school needs to buy all new plastic playground equipment.","The school needs to move recess to indoor spaces permanently."],letters:["F","G","H","J"],correct:1,
+explanation:"A well-defined design problem includes: the need (equipment too hot to use safely), the criteria for success (cool enough to touch on sunny days), and the constraints (budget of $500, timeline of one week). Option G is the only choice that captures all three elements. The other options either ignore constraints or don't address the actual problem.",
+sep:"Asking Questions and Defining Problems",ccc:"Influence of Engineering, Technology, and Science on Society",imageNeeded:false,imageDesc:""},
+
+{id:"N15",source:"Generated",match:"Generated",qNum:"New Q15",domain:"ETS",pe:"3-5-ETS1-2",dok:3,
+stem:"A group of students is designing a container to keep an ice cube from melting for as long as possible. They can only use materials from their classroom. Three teams propose different designs:\n\n| Team | Design | Materials Used |\n|------|--------|----------------|\n| Team 1 | Wrap ice in aluminum foil inside a plastic bag | Aluminum foil, plastic bag |\n| Team 2 | Place ice in a small box stuffed with shredded newspaper | Cardboard box, newspaper |\n| Team 3 | Place ice in a glass jar with no covering | Glass jar |\n\nBased on what is known about how different materials conduct heat, which design is most likely to keep the ice cube frozen longest, and why?",
+choices:["Team 1, because aluminum foil keeps things cold","Team 2, because newspaper and cardboard are poor conductors of heat, so they slow down heat transfer to the ice","Team 3, because glass is the strongest material and protects the ice best","All three designs will work equally well"],letters:["A","B","C","D"],correct:1,
+explanation:"Team 2's design uses newspaper and cardboard, which are both poor conductors of heat (good insulators). This means heat from the surrounding air transfers slowly to the ice, keeping it frozen longer. Aluminum foil (Team 1) actually conducts heat well, and an uncovered glass jar (Team 3) provides almost no insulation. Comparing solutions based on science knowledge is the core of 3-5-ETS1-2.",
+sep:"Constructing Explanations and Designing Solutions",ccc:"Energy and Matter",imageNeeded:false,imageDesc:""},
+
+{id:"N16",source:"Generated",match:"Generated",qNum:"New Q16",domain:"ETS",pe:"3-5-ETS1-2",dok:2,
+stem:"A student is designing a bridge out of craft sticks and glue that must hold at least 500 grams and cost less than $5 in materials. The student builds three different bridge designs and tests each one.\n\n| Design | Mass Held Before Breaking | Material Cost |\n|--------|--------------------------|---------------|\n| Bridge A | 600 g | $4.50 |\n| Bridge B | 750 g | $6.00 |\n| Bridge C | 480 g | $3.00 |\n\nWhich bridge design best meets both the criteria and constraints of the problem?",
+choices:["Bridge A, because it holds more than 500 g and costs less than $5.00","Bridge B, because it holds the most weight","Bridge C, because it costs the least","None of the bridges meet the criteria and constraints"],letters:["F","G","H","J"],correct:0,
+explanation:"The criteria state the bridge must hold at least 500g AND cost less than $5. Bridge A meets both (600g > 500g, and $4.50 < $5.00). Bridge B holds the most weight but exceeds the cost constraint ($6.00 > $5.00). Bridge C is cheapest but fails the weight criterion (480g < 500g). Evaluating solutions against specific criteria and constraints is the core skill of 3-5-ETS1-2.",
+sep:"Constructing Explanations and Designing Solutions",ccc:"Influence of Engineering, Technology, and Science on Society",imageNeeded:false,imageDesc:""},
+
+{id:"N17",source:"Generated",match:"Generated",qNum:"New Q17",domain:"ETS",pe:"3-5-ETS1-3",dok:3,
+stem:"A student wants to test whether the type of soil affects how fast a bean seed sprouts. The student sets up three pots:\n\n\u2022 Pot 1: Sandy soil, placed by a sunny window, watered daily with 50 mL of water\n\u2022 Pot 2: Clay soil, placed in a dark closet, watered daily with 100 mL of water\n\u2022 Pot 3: Potting soil, placed by a sunny window, watered daily with 50 mL of water\n\nWhy is this NOT a fair test?",
+choices:["The student used too many pots for the investigation.","The student should have used the same type of soil in all three pots.","The student changed more than one variable between the pots, so any differences in sprouting cannot be attributed only to the type of soil.","The student should not have watered the plants at all during the investigation."],letters:["A","B","C","D"],correct:2,
+explanation:"In a fair test, only one variable (the independent variable) should change while everything else stays the same (controlled variables). Here, the student changed soil type, location (sunny vs. dark), AND water amount between pots. Because multiple variables changed, it's impossible to know which caused any difference in sprouting. A fair test requires controlling all variables except the one being tested.",
+sep:"Planning and Carrying Out Investigations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""},
+
+{id:"N18",source:"Generated",match:"Generated",qNum:"New Q18",domain:"PS",pe:"5-PS1-1",dok:1,
+stem:"Which statement best describes why a solid keeps its shape but a gas does not?",
+choices:["The particles in a solid are locked in place and cannot move, while the particles in a gas move freely in all directions.","Solids have particles but gases do not contain particles.","Gas particles are lighter than solid particles.","Solids are always heavier than gases."],letters:["F","G","H","J"],correct:0,
+explanation:"In the particle model of matter, solids have particles that are tightly packed and vibrate in fixed positions, which is why solids hold their shape. Gas particles move freely and spread out to fill their container, which is why gases have no fixed shape. Both solids and gases are made of particles \u2014 the difference is how those particles are arranged and how much they move.",
+sep:"Developing and Using Models",ccc:"Structure and Function",imageNeeded:false,imageDesc:""},
+
+{id:"N19",source:"Generated",match:"Generated",qNum:"New Q19",domain:"PS",pe:"5-PS1-4",dok:2,
+stem:"A student mixes iron filings with sulfur powder in a bowl. The student observes that a magnet can still separate the iron filings from the sulfur.\n\nIn a second test, the student heats the same iron and sulfur mixture strongly. After heating, the magnet can no longer pull the iron out of the mixture.\n\nWhat can the student conclude?",
+choices:["Heating always destroys magnets, so the magnet stopped working.","The iron disappeared during heating.","Heating the iron and sulfur together caused a chemical change that created a new substance different from both iron and sulfur.","The sulfur melted and covered the iron, hiding it from the magnet."],letters:["A","B","C","D"],correct:2,
+explanation:"Before heating, the iron and sulfur were just a physical mixture \u2014 the iron kept its properties (magnetic) and could be separated. After heating, a chemical change occurred: the iron and sulfur combined to form a completely new substance (iron sulfide) that no longer has the magnetic properties of iron. This is key evidence that mixing + energy can create new substances, which is the core investigation of 5-PS1-4.",
+sep:"Planning and Carrying Out Investigations",ccc:"Cause and Effect",imageNeeded:false,imageDesc:""}
+];
+
+// ===== PE DATA =====
+const peData = [
+{code:"5-PS1-1",domain:"PS",text:"Develop a model to describe that matter is made of particles too small to be seen.",sep:"Developing and Using Models",coverage:"partial",coverageNote:"1 STAAR partial (Q11) + 2 new"},
+{code:"5-PS1-2",domain:"PS",text:"Measure and graph quantities to provide evidence that regardless of the type of change, total weight of matter is conserved.",sep:"Using Mathematics and Computational Thinking",coverage:"good",coverageNote:"1 STAAR (Q32) + 1 new"},
+{code:"5-PS1-3",domain:"PS",text:"Make observations and measurements to identify materials based on their properties.",sep:"Planning and Carrying Out Investigations",coverage:"good",coverageNote:"3 STAAR (Q4, Q16, Q27)"},
+{code:"5-PS1-4",domain:"PS",text:"Conduct an investigation to determine whether the mixing of two or more substances results in new substances.",sep:"Planning and Carrying Out Investigations",coverage:"partial",coverageNote:"1 STAAR partial (Q21) + 2 new"},
+{code:"5-PS2-1",domain:"PS",text:"Support an argument that the gravitational force exerted by Earth on objects is directed down.",sep:"Engaging in Argument from Evidence",coverage:"none",coverageNote:"0 STAAR \u2014 2 new questions fill this gap"},
+{code:"5-PS3-1",domain:"PS",text:"Use models to describe that energy in animals' food was once energy from the sun.",sep:"Developing and Using Models",coverage:"good",coverageNote:"2 STAAR (Q9, Q19)"},
+{code:"5-LS1-1",domain:"LS",text:"Support an argument that plants get the materials they need for growth chiefly from air and water.",sep:"Engaging in Argument from Evidence",coverage:"partial",coverageNote:"1 STAAR partial (Q33) + 2 new"},
+{code:"5-LS2-1",domain:"LS",text:"Develop a model to describe the movement of matter among plants, animals, decomposers, and the environment.",sep:"Developing and Using Models",coverage:"good",coverageNote:"3 STAAR (Q22, Q25, Q33) + 1 new"},
+{code:"5-ESS1-1",domain:"ESS",text:"Support an argument that differences in apparent brightness of the sun compared to other stars is due to their relative distances from Earth.",sep:"Engaging in Argument from Evidence",coverage:"none",coverageNote:"0 STAAR \u2014 2 new questions fill this gap"},
+{code:"5-ESS1-2",domain:"ESS",text:"Represent data in graphical displays to reveal patterns of daily changes in length and direction of shadows, day and night, and the seasonal appearance of some stars in the night sky.",sep:"Analyzing and Interpreting Data",coverage:"good",coverageNote:"2 STAAR (Q2, Q23) + 1 new"},
+{code:"5-ESS2-1",domain:"ESS",text:"Develop a model using an example to describe ways the geosphere, biosphere, hydrosphere, and/or atmosphere interact.",sep:"Developing and Using Models",coverage:"good",coverageNote:"6 STAAR items (Q1, Q7, Q18, Q26, Q34, Q36)"},
+{code:"5-ESS2-2",domain:"ESS",text:"Describe and graph the amounts and percentages of water and fresh water in various reservoirs to provide evidence about the distribution of water on Earth.",sep:"Using Mathematics and Computational Thinking",coverage:"partial",coverageNote:"1 STAAR partial (Q18) + 1 new"},
+{code:"5-ESS3-1",domain:"ESS",text:"Obtain and combine information about ways individual communities use science ideas to protect the Earth's resources and environment.",sep:"Obtaining, Evaluating, and Communicating Information",coverage:"good",coverageNote:"2 STAAR (Q28, Q31) + 1 new"},
+{code:"3-5-ETS1-1",domain:"ETS",text:"Define a simple design problem reflecting a need or a want that includes specified criteria for success and constraints on materials, time, or cost.",sep:"Asking Questions and Defining Problems",coverage:"none",coverageNote:"0 STAAR \u2014 1 new question fills this gap"},
+{code:"3-5-ETS1-2",domain:"ETS",text:"Generate and compare multiple possible solutions to a problem based on how well each is likely to meet the criteria and constraints of the problem.",sep:"Constructing Explanations and Designing Solutions",coverage:"none",coverageNote:"0 STAAR \u2014 2 new questions fill this gap"},
+{code:"3-5-ETS1-3",domain:"ETS",text:"Plan and carry out fair tests in which variables are controlled and failure points are considered to identify aspects of a model or prototype that can be improved.",sep:"Planning and Carrying Out Investigations",coverage:"none",coverageNote:"0 STAAR \u2014 1 new question fills this gap"}
+];
+
+// ===== NAV =====
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById('page-'+id).classList.add('active');
+document.querySelectorAll('.sidebar nav button').forEach(b=>b.classList.remove('active'));
+event.currentTarget.classList.add('active');
+}
+
+// ===== QUESTION BANK =====
+let currentQ = null;
+
+function domainBadgeClass(d){return 'badge-'+(d==='ETS'?'ets':d.toLowerCase())}
+function matchBadgeClass(m){return m==='Strong'?'badge-strong':m==='Partial'?'badge-partial':m==='Generated'?'badge-generated':'badge-none'}
+function dokBadgeClass(d){return 'badge-dok'+d}
+
+function renderList(filtered){
+const el=document.getElementById('qb-items');
+el.innerHTML='';
+if(filtered.length===0){el.innerHTML='<p style="padding:20px;color:var(--muted);text-align:center">No questions match the selected filters.</p>';return;}
+filtered.forEach((q,i)=>{
+const div=document.createElement('div');
+div.className='qb-item'+(currentQ&&currentQ.id===q.id?' active':'');
+div.onclick=()=>{currentQ=q;renderList(filtered);renderDetail(q)};
+div.innerHTML=`<div class="qb-item-title"><span>${q.qNum}</span><span class="badge ${matchBadgeClass(q.match)}">${q.match}</span></div>
+<div class="qb-item-meta"><span class="badge ${domainBadgeClass(q.domain)}">${q.domain}</span><span class="badge ${dokBadgeClass(q.dok)}">DOK ${q.dok}</span><span>${q.pe}</span>${q.imageNeeded?'<span title="Image needed">&#128247;</span>':''}</div>`;
+el.appendChild(div);
+});
+}
+
+function renderDetail(q){
+const el=document.getElementById('qb-detail');
+let stemHtml=q.stem.replace(/\n/g,'<br>');
+// render markdown-style tables in stems
+if(q.stem.includes('|')){
+const lines=q.stem.split('\n');
+let inTable=false;let tableHtml='<table class="q-table">';let outLines=[];
+lines.forEach(line=>{
+const trimmed=line.trim();
+if(trimmed.startsWith('|')&&trimmed.endsWith('|')){
+if(trimmed.replace(/[\|\-\s]/g,'')===''){inTable=true;return;}
+const cells=trimmed.split('|').filter(c=>c.trim()!=='');
+if(!inTable){tableHtml+='<tr>'+cells.map(c=>'<th>'+c.trim()+'</th>').join('')+'</tr>';inTable=true;}
+else{tableHtml+='<tr>'+cells.map(c=>'<td>'+c.trim()+'</td>').join('')+'</tr>';}
+}else{
+if(inTable){outLines.push(tableHtml+'</table>');tableHtml='<table class="q-table">';inTable=false;}
+outLines.push(line);
+}
+});
+if(inTable)outLines.push(tableHtml+'</table>');
+stemHtml=outLines.join('<br>');
+}
+
+let choicesHtml=q.choices.map((c,i)=>`<li class="${i===q.correct?'correct':''}"><span class="letter">${q.letters[i]}.</span><span>${c}</span></li>`).join('');
+
+let modNote='';
+if(q.modNote){modNote=`<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:12px;margin-bottom:20px"><h4 style="font-size:13px;color:#1e40af;margin:0 0 6px">Modification Note for NGSS Alignment</h4><p style="font-size:14px;margin:0">${q.modNote}</p></div>`;}
+
+el.innerHTML=`
+<div class="qb-detail-header">
+<h3 style="font-size:20px">${q.qNum}</h3>
+<span class="badge ${matchBadgeClass(q.match)}">${q.source==='STAAR'?'STAAR \u2014 ':''} ${q.match} Match</span>
+<span class="badge ${domainBadgeClass(q.domain)}">${q.domain==='PS'?'Physical Science':q.domain==='LS'?'Life Science':q.domain==='ESS'?'Earth & Space Science':'Engineering Design'}</span>
+<span class="badge ${dokBadgeClass(q.dok)}">DOK ${q.dok}</span>
+</div>
+${modNote}
+<div class="q-stem">${stemHtml}</div>
+<ul class="q-choices">${choicesHtml}</ul>
+<div class="q-explanation"><h4>Why ${q.letters[q.correct]} is correct</h4><p>${q.explanation}</p></div>
+<div class="q-meta-grid">
+<div class="q-meta-card"><div class="label">Performance Expectation</div><div class="val">${q.pe}</div></div>
+<div class="q-meta-card"><div class="label">Domain</div><div class="val">${q.domain==='PS'?'Physical Science':q.domain==='LS'?'Life Science':q.domain==='ESS'?'Earth & Space Science':'Engineering Design'}</div></div>
+<div class="q-meta-card"><div class="label">DOK Level</div><div class="val">DOK ${q.dok} ${q.dok===1?'(Recall)':q.dok===2?'(Skill/Concept)':'(Strategic Thinking)'}</div></div>
+<div class="q-meta-card"><div class="label">SEP</div><div class="val">${q.sep}</div></div>
+<div class="q-meta-card"><div class="label">CCC</div><div class="val">${q.ccc}</div></div>
+${q.teks?`<div class="q-meta-card"><div class="label">Original TEKS</div><div class="val">${q.teks}</div></div>`:''}
+</div>
+<div class="image-flag ${q.imageNeeded?'needed':'not-needed'}">
+${q.imageNeeded?'&#128247; Image Recommended':'&#10003; No Image Needed'}
+${q.imageNeeded&&q.imageDesc?'<span style="margin-left:8px;font-weight:400;font-size:12px">\u2014 '+q.imageDesc+'</span>':''}
+</div>`;
+}
+
+function filterQuestions(){
+const dom=document.getElementById('filter-domain').value;
+const src=document.getElementById('filter-source').value;
+const dok=document.getElementById('filter-dok').value;
+const img=document.getElementById('filter-image').value;
+let f=questions.filter(q=>{
+if(dom!=='all'&&q.domain!==dom)return false;
+if(src!=='all'&&q.source!==src)return false;
+if(dok!=='all'&&q.dok!==parseInt(dok))return false;
+if(img==='yes'&&!q.imageNeeded)return false;
+if(img==='no'&&q.imageNeeded)return false;
+return true;
+});
+renderList(f);
+}
+
+// ===== STANDARDS PAGE =====
+function renderStandards(){
+const el=document.getElementById('standards-grid');
+const domainOrder=['PS','LS','ESS','ETS'];
+const domainNames={PS:'Physical Science',LS:'Life Science',ESS:'Earth & Space Science',ETS:'Engineering Design'};
+let html='';
+domainOrder.forEach(d=>{
+html+=`<div style="grid-column:1/-1;margin-top:16px"><h3 style="font-size:16px;margin-bottom:8px"><span class="badge ${domainBadgeClass(d)}">${domainNames[d]}</span></h3></div>`;
+peData.filter(p=>p.domain===d).forEach(p=>{
+const cls=p.coverage==='good'?'covered':p.coverage==='partial'?'partial-cov':'not-covered';
+const statusColor=p.coverage==='good'?'var(--strong)':p.coverage==='partial'?'var(--partial)':'var(--none)';
+const statusText=p.coverage==='good'?'Well Covered':p.coverage==='partial'?'Partially Covered':'Not Covered by STAAR';
+html+=`<div class="pe-card ${cls}">
+<div class="pe-code">${p.code}</div>
+<div class="pe-text">${p.text}</div>
+<div style="font-size:12px;color:var(--muted);margin-top:6px">SEP: ${p.sep}</div>
+<div class="pe-status" style="color:${statusColor}">${statusText} \u2014 ${p.coverageNote}</div>
+</div>`;
+});
+});
+el.innerHTML=html;
+}
+
+// ===== INIT =====
+renderList(questions);
+renderStandards();
+</script>
+</body>
+</html>
